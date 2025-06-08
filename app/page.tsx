@@ -11,7 +11,6 @@ import {
   Phone,
   Mail,
   MapPin,
-  Calendar,
   ArrowRight,
   Target,
   Lightbulb,
@@ -24,6 +23,7 @@ import Image from "next/image"
 import { LanguageSwitcher } from "@/components/language-switcher"
 import { AccessibilityToggle } from "@/components/accessibility-toggle"
 import { SearchButton } from "@/components/search-button"
+import { NewsSection } from "@/components/news-section"
 import { type Language, defaultLanguage, getTranslation } from "@/lib/i18n"
 
 export default function HomePage() {
@@ -210,100 +210,7 @@ export default function HomePage() {
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t("newsSubtitle")}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Sample news items - these would come from Strapi */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                  <Calendar className="h-4 w-4" />
-                  15 желтоқсан, 2024
-                </div>
-                <CardTitle className="text-deep-blue">
-                  {currentLanguage === "kk" && "Жаһандық университеттермен жаңа серіктестік"}
-                  {currentLanguage === "ru" && "Новое партнерство с глобальными университетами"}
-                  {currentLanguage === "en" && "New Partnership with Global Universities"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  {currentLanguage === "kk" &&
-                    "ENIC жаһандық білім беру ынтымақтастығын дамыту үшін бес континенттегі жетекші университеттермен стратегиялық серіктестік туралы хабарлайды."}
-                  {currentLanguage === "ru" &&
-                    "ENIC объявляет о стратегических партнерствах с ведущими университетами пяти континентов для развития глобального образовательного сотрудничества."}
-                  {currentLanguage === "en" &&
-                    "ENIC announces strategic partnerships with leading universities across five continents to enhance global education collaboration."}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-orange-accent border-orange-accent hover:bg-orange-accent hover:text-white"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                  <Calendar className="h-4 w-4" />
-                  10 желтоқсан, 2024
-                </div>
-                <CardTitle className="text-deep-blue">
-                  {currentLanguage === "kk" && "Зерттеу гранттары бағдарламасының іске қосылуы"}
-                  {currentLanguage === "ru" && "Запуск программы исследовательских грантов"}
-                  {currentLanguage === "en" && "Research Grant Program Launch"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  {currentLanguage === "kk" &&
-                    "Цифрлық трансформация мен студенттердің табысына бағытталған инновациялық жоғары білім жобаларына 2 млн долларлық зерттеу гранттарын жариялау."}
-                  {currentLanguage === "ru" &&
-                    "Объявление о 2 млн долларов исследовательских грантов для инновационных проектов высшего образования, сосредоточенных на цифровой трансформации и успехе студентов."}
-                  {currentLanguage === "en" &&
-                    "Announcing $2M in research grants for innovative higher education projects focusing on digital transformation and student success."}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-light-blue border-light-blue hover:bg-light-blue hover:text-white"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                  <Calendar className="h-4 w-4" />5 желтоқсан, 2024
-                </div>
-                <CardTitle className="text-deep-blue">
-                  {currentLanguage === "kk" && "2025 жылғы жылдық конференция"}
-                  {currentLanguage === "ru" && "Ежегодная конференция 2025"}
-                  {currentLanguage === "en" && "Annual Conference 2025"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
-                  {currentLanguage === "kk" &&
-                    "Негізгі баяндамашылар мен инновациялық семинарларды қамтитын жоғары білім беру үздіктігі жөніндегі жылдық конференциямыздың күнін сақтаңыз."}
-                  {currentLanguage === "ru" &&
-                    "Сохраните дату нашей ежегодной конференции по совершенству высшего образования с ключевыми докладчиками и инновационными семинарами."}
-                  {currentLanguage === "en" &&
-                    "Save the date for our annual Higher Education Excellence Conference, featuring keynote speakers and innovative workshops."}
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-deep-blue border-deep-blue hover:bg-deep-blue hover:text-white"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+          <NewsSection currentLanguage={currentLanguage} />
         </div>
       </section>
 

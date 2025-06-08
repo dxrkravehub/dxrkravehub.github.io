@@ -20,18 +20,24 @@ interface StrapiItem {
 class StrapiAPI {
   private baseURL: string
   private token?: string
+  private isAvailable: boolean
 
   constructor() {
     this.baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337"
     this.token = process.env.STRAPI_API_TOKEN
+    this.isAvailable = !!process.env.NEXT_PUBLIC_STRAPI_URL
 
     // Log warning if Strapi URL is not configured
     if (!process.env.NEXT_PUBLIC_STRAPI_URL) {
-      console.warn("NEXT_PUBLIC_STRAPI_URL not configured, using localhost")
+      console.warn("NEXT_PUBLIC_STRAPI_URL not configured, using mock data")
     }
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    if (!this.isAvailable) {
+      throw new Error("Strapi is not configured")
+    }
+
     const url = `${this.baseURL}/api${endpoint}`
 
     const config: RequestInit = {
@@ -57,12 +63,69 @@ class StrapiAPI {
     }
   }
 
+  // Mock data for when Strapi is not available
+  private getMockNews(): StrapiResponse<StrapiItem[]> {
+    return {
+      data: [
+        {
+          id: 1,
+          attributes: {
+            title: "New Partnership with Global Universities",
+            excerpt: "ENIC announces strategic partnerships with leading universities across five continents.",
+            publishedAt: "2024-12-15T00:00:00.000Z",
+            category: "Partnerships",
+            slug: "new-partnership-global-universities",
+          },
+          createdAt: "2024-12-15T00:00:00.000Z",
+          updatedAt: "2024-12-15T00:00:00.000Z",
+        },
+        {
+          id: 2,
+          attributes: {
+            title: "Research Grant Program Launch",
+            excerpt: "Announcing $2M in research grants for innovative higher education projects.",
+            publishedAt: "2024-12-10T00:00:00.000Z",
+            category: "Research",
+            slug: "research-grant-program-launch",
+          },
+          createdAt: "2024-12-10T00:00:00.000Z",
+          updatedAt: "2024-12-10T00:00:00.000Z",
+        },
+        {
+          id: 3,
+          attributes: {
+            title: "Annual Conference 2025",
+            excerpt: "Save the date for our annual Higher Education Excellence Conference.",
+            publishedAt: "2024-12-05T00:00:00.000Z",
+            category: "Events",
+            slug: "annual-conference-2025",
+          },
+          createdAt: "2024-12-05T00:00:00.000Z",
+          updatedAt: "2024-12-05T00:00:00.000Z",
+        },
+      ],
+      meta: {
+        pagination: {
+          page: 1,
+          pageSize: 3,
+          pageCount: 1,
+          total: 3,
+        },
+      },
+    }
+  }
+
   // Get all news articles
   async getNews(params?: {
     page?: number
     pageSize?: number
     sort?: string
   }): Promise<StrapiResponse<StrapiItem[]>> {
+    if (!this.isAvailable) {
+      // Return mock data when Strapi is not available
+      return this.getMockNews()
+    }
+
     const searchParams = new URLSearchParams()
 
     if (params?.page) searchParams.set("pagination[page]", params.page.toString())
@@ -75,21 +138,61 @@ class StrapiAPI {
 
   // Get single news article
   async getNewsItem(id: number): Promise<StrapiResponse<StrapiItem>> {
+    if (!this.isAvailable) {
+      const mockNews = this.getMockNews()
+      const item = mockNews.data.find((item) => item.id === id)
+      if (!item) {
+        throw new Error("News item not found")
+      }
+      return { data: item, meta: {} }
+    }
+
     return this.request(`/news/${id}`)
   }
 
   // Get all programs
   async getPrograms(): Promise<StrapiResponse<StrapiItem[]>> {
+    if (!this.isAvailable) {
+      return {
+        data: [],
+        meta: { pagination: { page: 1, pageSize: 0, pageCount: 0, total: 0 } },
+      }
+    }
+
     return this.request("/programs?populate=*")
   }
 
   // Get single program
   async getProgram(id: number): Promise<StrapiResponse<StrapiItem>> {
+    if (!this.isAvailable) {
+      throw new Error("Programs not available without Strapi")
+    }
+
     return this.request(`/programs/${id}?populate=*`)
   }
 
   // Get site settings/configuration
   async getSiteConfig(): Promise<StrapiResponse<StrapiItem>> {
+    if (!this.isAvailable) {
+      return {
+        data: {
+          id: 1,
+          attributes: {
+            siteName: "ENIC",
+            tagline: "Educational Network Information Centre",
+            heroTitle: "National Center for Higher Education Development",
+            heroDescription: "Empowering institutions, educators, and students through innovation.",
+            contactEmail: "info@enic.kz",
+            contactPhone: "+7 (7172) 123-456",
+            address: "Nur-Sultan, Mangilik El Ave 8, 010000",
+          },
+          createdAt: "2024-12-15T00:00:00.000Z",
+          updatedAt: "2024-12-15T00:00:00.000Z",
+        },
+        meta: {},
+      }
+    }
+
     return this.request("/site-config?populate=*")
   }
 
@@ -99,10 +202,29 @@ class StrapiAPI {
     email: string
     message: string
   }): Promise<StrapiResponse<StrapiItem>> {
+    if (!this.isAvailable) {
+      // Simulate successful submission
+      console.log("Contact form submitted (mock):", data)
+      return {
+        data: {
+          id: Date.now(),
+          attributes: { ...data, status: "new" },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        meta: {},
+      }
+    }
+
     return this.request("/contacts", {
       method: "POST",
       body: JSON.stringify({ data }),
     })
+  }
+
+  // Check if Strapi is available
+  isConfigured(): boolean {
+    return this.isAvailable
   }
 }
 
