@@ -1,0 +1,44 @@
+{
+  "news": {
+    "fields": {
+      "title": "Text (required)",
+      "excerpt": "Text",
+      "content": "Rich Text",
+      "publishedAt": "DateTime",
+      "category": "Text",
+      "slug": "UID (from title)",
+      "featuredImage": "Media"
+    }
+  },
+  "programs": {
+    "fields": {
+      "title": "Text (required)",
+      "description": "Text",
+      "content": "Rich Text",
+      "icon": "Text",
+      "category": "Text",
+      "slug": "UID (from title)",
+      "image": "Media"
+    }
+  },
+  "contacts": {
+    "fields": {
+      "name": "Text (required)",
+      "email": "Email (required)",
+      "message": "Text (required)",
+      "status": "Enumeration (new, read, replied)"
+    }
+  },
+  "site-config": {
+    "fields": {
+      "siteName": "Text",
+      "tagline": "Text",
+      "heroTitle": "Text",
+      "heroDescription": "Text",
+      "contactEmail": "Email",
+      "contactPhone": "Text",
+      "address": "Text"
+    },
+    "type": "Single Type"
+  }
+}
